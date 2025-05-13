@@ -1,0 +1,85 @@
+/* location.css */
+.location-wrapper {
+    position: relative;
+    display: inline-block;
+    margin-left: 1rem;
+  }
+  
+  #location-button {
+    padding: 8px 12px;
+    background: #ff6b6b;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  
+  .location-dropdown {
+    position: absolute;
+    top: 120%;
+    left: 0;
+    background: #fff;
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    width: 250px;
+    z-index: 1000;
+    display: none;
+    border-radius: 10px;
+  }
+  
+  .location-dropdown.show {
+    display: block;
+  }
+  
+  .location-dropdown button,
+  .location-dropdown input {
+    display: block;
+    width: 100%;
+    margin: 0.5rem 0;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+  }
+  
+  .location-dropdown input {
+    border: 1px solid #aaa;
+  }
+  
+  .location-result {
+    font-size: 0.9rem;
+    color: #555;
+    margin-top: 0.5rem;
+  }
+  
+  .close-dropdown {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: #888;
+  }
+  .location-suggestions {
+    max-height: 200px;
+    overflow-y: auto;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-top: 10px;
+    padding: 5px 0;
+    list-style: none;
+    position: absolute;
+    z-index: 999;
+    width: 90%;
+  }
+  
+  .suggestion-item {
+    padding: 8px 12px;
+    cursor: pointer;
+  }
+  
+  .suggestion-item:hover {
+    background-color: #f0f0f0;
+  }
+  

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FoodFrenzy - Fast Delivery</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="location.css">
+  <script src="script.js" defer></script>
+</head>
+
+<body>
+  <header class="navbar">
+    <div class="logo">FoodFrenzy</div>
+
+    <div class="location-wrapper">
+      <button id="location-button">📍 Set Location</button>
+      <div class="location-dropdown" id="location-dropdown">
+        <span class="close-dropdown" id="close-dropdown">❌</span>
+        
+        <button id="auto-detect">Detect Automatically</button>
+        <button id="manual-toggle">Enter Manually</button>
+        <!--<input type="text" id="manual-input" placeholder="Enter location manually">-->
+        
+        <input type="text" id="manual-input" placeholder="Enter location manually">
+
+       
+
+        <button id="submit-location">Submit</button>
+        
+        <ul id="location-suggestions" class="location-suggestions"></ul>
+        <div class="location-result" id="location-result">Location not set</div>
+      </div>
+    </div>
+    
+      <nav class="nav-links">
+      <a href="#">Home</a>
+      <a href="#">Restaurants</a>
+      <a href="#">Offers</a>
+      <!-- This will be dynamically updated -->
+      <a href="login.html" id="authLink">Login</a>
+    </nav>
+    <div class="cart-icon">
+      🛒 <span class="cart-count">0</span>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-content" data-aos="fade-right">
+      <h1>Get your favorite food<br>delivered <span class="highlight">fast & fresh</span></h1>
+      <p>Browse restaurants, order your favorite dishes, and track it live.</p>
+  
+      <div class="hero-search">
+        <input type="text" placeholder="Search for restaurants or dishes...">
+        <button>Order Now</button>
+      </div>
+    </div>
+  
+    <div class="hero-image" data-aos="fade-left">
+      <img src="assets/food-frenzy.png" alt="Food Delivery Illustration" loading="lazy">
+    </div>
+  </section>
+
+  <section class="popular-section">
+    <div class="section-title" data-aos="fade-up">
+      <h2>Popular Restaurants</h2>
+      <p>Explore the best food places around you!</p>
+    </div>
+  
+    <div class="popular-grid">
+      <!-- Card 1 -->
+      <div class="card" data-aos="fade-up" data-aos-delay="100">
+        <img src="https://via.placeholder.com/300x200?text=Restaurant+1" alt="Restaurant 1">
+        <div class="card-content">
+          <h3>Restaurant 1</h3>
+          <p>Amazing food, fast delivery!</p>
+          <button onclick="window.location.href='menu.html'">View Menu</button>
+
+        </div>
+      </div>
+  
+      <!-- Card 2 -->
+      <div class="card" data-aos="fade-up" data-aos-delay="200">
+        <img src="https://via.placeholder.com/300x200?text=Restaurant+2" alt="Restaurant 2">
+        <div class="card-content">
+          <h3>Restaurant 2</h3>
+          <p>Delicious food made with love.</p>
+          <button onclick="window.location.href=''">View Menu</button>
+
+        </div>
+      </div>
+  
+      <!-- Card 3 -->
+      <div class="card" data-aos="fade-up" data-aos-delay="300">
+        <img src="https://via.placeholder.com/300x200?text=Restaurant+3" alt="Restaurant 3">
+        <div class="card-content">
+          <h3>Restaurant 3</h3>
+          <p>Flavors you won't forget!</p>
+          <button>View Menu</button>
+        </div>
+      </div>
+  
+      <!-- Card 4 -->
+      <div class="card" data-aos="fade-up" data-aos-delay="400">
+        <img src="https://via.placeholder.com/300x200?text=Restaurant+4" alt="Restaurant 4">
+        <div class="card-content">
+          <h3>Restaurant 4</h3>
+          <p>Your go-to for fast food.</p>
+          <button>View Menu</button>
+        </div>
+      </div>
+  
+      <!-- Card 5 -->
+      <div class="card" data-aos="fade-up" data-aos-delay="500">
+        <img src="https://via.placeholder.com/300x200?text=Restaurant+5" alt="Restaurant 5">
+        <div class="card-content">
+          <h3>Restaurant 5</h3>
+          <p>Classic favorites, delivered fast.</p>
+          <button>View Menu</button>
+        </div>
+      </div>
+  
+      <!-- Card 6 -->
+      <div class="card" data-aos="fade-up" data-aos-delay="600">
+        <img src="https://via.placeholder.com/300x200?text=Restaurant+6" alt="Restaurant 6">
+        <div class="card-content">
+          <h3>Restaurant 6</h3>
+          <p>Fresh ingredients, amazing taste.</p>
+          <button>View Menu</button>
+        </div>
+      </div>
+  
+      <!-- Card 7 -->
+      <div class="card" data-aos="fade-up" data-aos-delay="700">
+        <img src="https://via.placeholder.com/300x200?text=Restaurant+7" alt="Restaurant 7">
+        <div class="card-content">
+          <h3>Restaurant 7</h3>
+          <p>For the finest dining experience.</p>
+          <button>View Menu</button>
+        </div>
+      </div>
+  
+      <!-- Card 8 -->
+      <div class="card" data-aos="fade-up" data-aos-delay="800">
+        <img src="https://via.placeholder.com/300x200?text=Restaurant+8" alt="Restaurant 8">
+        <div class="card-content">
+          <h3>Restaurant 8</h3>
+          <p>Satisfy your hunger with amazing dishes.</p>
+          <button>View Menu</button>
+        </div>
+      </div>
+  
+      <!-- Card 9 -->
+      <div class="card" data-aos="fade-up" data-aos-delay="900">
+        <img src="https://via.placeholder.com/300x200?text=Restaurant+9" alt="Restaurant 9">
+        <div class="card-content">
+          <h3>Restaurant 9</h3>
+          <p>Eat fresh, eat tasty.</p>
+          <button>View Menu</button>
+        </div>
+      </div>
+  
+      <!-- Card 10 -->
+      <div class="card" data-aos="fade-up" data-aos-delay="1000">
+        <img src="https://via.placeholder.com/300x200?text=Restaurant+10" alt="Restaurant 10">
+        <div class="card-content">
+          <h3>Restaurant 10</h3>
+          <p>Fast service, great flavors.</p>
+          <button>View Menu</button>
+        </div>
+      </div>
+
+      <!-- Card 11 -->
+      <div class="card" data-aos="fade-up" data-aos-delay="1100">
+        <img src="https://via.placeholder.com/300x200?text=Restaurant+10" alt="Restaurant 11">
+        <div class="card-content">
+          <h3>Restaurant 11</h3>
+          <p>Fast service, great flavors.</p>
+          <button>View Menu</button>
+        </div>
+      </div>
+      <!-- Card 12 -->
+      <div class="card" data-aos="fade-up" data-aos-delay="1200">
+        <img src="https://via.placeholder.com/300x200?text=Restaurant+10" alt="Restaurant 12">
+        <div class="card-content">
+          <h3>Restaurant 12</h3>
+          <p>Fast service, great flavors.</p>
+          <button>View Menu</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <main style="height: 2000px;">
+    <!-- Temp height to test sticky navbar -->
+  </main>
+
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    // Initialize AOS animations
+    AOS.init({
+      duration: 1000,
+      once: true
+    });
+
+    // Check if the user is logged in
+    const user = JSON.parse(localStorage.getItem('user'));
+
+    // Get the authLink element where Login/Profile will be added
+    const authLink = document.getElementById('authLink');
+
+    if (user) {
+      // If the user is logged in, replace the Login link with Profile menu
+      authLink.innerHTML = `Hello, ${user.name}`;
+      authLink.setAttribute("href", "profile.html");
+    } else {
+      // If no user is logged in, show the Login link
+      authLink.innerHTML = "Login";
+      authLink.setAttribute("href", "login.html");
+    }
+  </script>
+
+  <script src="location.js"></script>
+
+  
+
+</body>
+</html>

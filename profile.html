@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>User Profile | FoodFrenzy</title>
+  <link rel="stylesheet" href="profile.css" />
+</head>
+<body>
+
+<div class="profile-container">
+  <aside class="sidebar">
+     <style>
+    .avatar {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      border: 3px solid #ff914d;
+      object-fit: cover;
+    }
+    .avatar-box {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+  </style>
+    <div class="avatar-box">
+      <img src="assets/avtaar.png" alt="User Avatar" class="avatar" id="user-avatar">
+      <h2 id="username">Username</h2>
+      <p id="user-email">email@example.com</p>
+    </div>
+    <ul class="menu">
+      <li><span>📋</span> Account Info</li>
+      <li><span>💳</span> Payment Methods</li>
+      <li><span>🧾</span> Recent Orders</li>
+      <li><span>⚙️</span> Preferences</li>
+      <li><span>📦</span> Saved Address</li>
+      <li><span>❓</span> FAQ & Support</li>
+      <li><span>📞</span> Customer Service</li>
+      <li class="logout">🚪 Logout</li>
+    </ul>
+  </aside>
+</div>
+
+<script src="profile.js"></script>
+</body>
+</html>

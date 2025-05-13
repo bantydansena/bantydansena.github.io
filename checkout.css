@@ -1,0 +1,39 @@
+body {
+  font-family: sans-serif;
+  margin: 0;
+  background: #f9f5f2;
+}
+
+.checkout-container {
+  display: flex;
+  max-width: 1100px;
+  margin: auto;
+  padding: 20px;
+  gap: 20px;
+}
+
+.left, .right {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  flex: 1;
+}
+
+input, select {
+  width: 100%;
+  margin: 5px 0 15px;
+  padding: 8px;
+}
+
+button {
+  background: #6c3b28;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #552c1f;
+}

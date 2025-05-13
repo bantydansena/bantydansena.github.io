@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FoodFrenzy - Fast Delivery</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="location.css">
+  <script src="script.js" defer></script>
+</head>
+
+<body>
+  <header class="navbar">
+    <div class="logo">FoodFrenzy</div>
+
+    <div class="location-wrapper">
+      <button id="location-button">📍 Set Location</button>
+      <div class="location-dropdown" id="location-dropdown">
+        <span class="close-dropdown" id="close-dropdown">❌</span>
+        
+        <button id="auto-detect">Detect Automatically</button>
+        <button id="manual-toggle">Enter Manually</button>
+        <!--<input type="text" id="manual-input" placeholder="Enter location manually">-->
+        
+        <input type="text" id="manual-input" placeholder="Enter location manually">
+
+       
+
+        <button id="submit-location">Submit</button>
+        
+        <ul id="location-suggestions" class="location-suggestions"></ul>
+        <div class="location-result" id="location-result">Location not set</div>
+      </div>
+    </div>
+    
+      <nav class="nav-links">
+      <a href="#">Home</a>
+      <a href="#">Restaurants</a>
+      <!-- <a href="#">Offers</a> -->
+      <!-- This will be dynamically updated -->
+      <a href="login.html" id="authLink">Login</a>
+    </nav>
+    <div class="cart-icon">
+      🛒 <span class="cart-count">0</span>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-content" data-aos="fade-right">
+      <h1>Get your favorite food<br>delivered <span class="highlight">fast & fresh</span></h1>
+      <p>Browse restaurants, order your favorite dishes, and track it live.</p>
+  
+      <div class="hero-search">
+        <input type="text" placeholder="Search for restaurants or dishes...">
+        <button>Order Now</button>
+      </div>
+    </div>
+  
+    <div class="hero-image" data-aos="fade-left">
+      <img src="Assets/Resturents/food-frenzy.png" alt="Food Delivery Illustration" loading="lazy">
+    </div>
+  </section>
+
+  <section class="popular-section">
+    <div class="section-title" data-aos="fade-up">
+      <h2>Popular Restaurants</h2>
+      <p>Explore the best food places around you!</p>
+    </div>
+  
+    <div class="popular-grid">
+      <!-- Card 1 -->
+      <div class="card" data-aos="fade-up" data-aos-delay="100">
+        <img src="Assets/Resturents/Menu 1.JPG" alt="Restaurant 1">
+        <div class="card-content">
+          <h3>Restaurant 1</h3>
+          <p>Amazing food, fast delivery!</p>
+          <button onclick="window.location.href='menu.html'">View Menu</button>
+
+        </div>
+      </div>
+  
+      <!-- Card 2 -->
+      <div class="card" data-aos="fade-up" data-aos-delay="200">
+        <img src="Assets/Resturents/Menu  2 -  Burger King.jpeg" alt="Restaurant 2">
+        <div class="card-content">
+          <h3>Burger King</h3>
+          <p>Burger, Fast Food, Beverages</p>
+          <button onclick="window.location.href='Menus/menu1.html'">View Menu</button>
+
+        </div>
+      </div>
+  
+      <!-- Card 3 -->
+      <div class="card" data-aos="fade-up" data-aos-delay="300">
+        <img src="Assets/Resturents/Menu 3 - KFC.jpeg" alt="Restaurant 3">
+        <div class="card-content">
+          <h3>KFC</h3>
+          <p>Burger, Fast Food, Rolls</p>
+          <button onclick="window.location.href='Menus/menu2.html'">View Menu</button>
+        </div>
+      </div>
+  
+      <!-- Card 4 -->
+      <div class="card" data-aos="fade-up" data-aos-delay="400">
+        <img src="Assets/Resturents/Menu 4 - HaldiRa,.jpeg" alt="Restaurant 4">
+        <div class="card-content">
+          <h3>Haldiram's Sweets and Namkeen</h3>
+          <p>Mithai, Beverages, , Ice Cream</p>
+          <button onclick="window.location.href='Menus/menu3.html'">View Menu</button>
+        </div>
+      </div>
+  
+      <!-- Card 5 -->
+      <div class="card" data-aos="fade-up" data-aos-delay="500">
+        <img src="Assets/Resturents/Menu 5 - Burger King.jpeg" alt="Restaurant 5">
+        <div class="card-content">
+          <h3>Burger Singh - Big Punjabi Burgers</h3>
+          <p>Burger, Fast Food</p>
+          <button onclick="window.location.href='Menus/menu4.html'">View Menu</button>
+        </div>
+      </div>
+  
+      <!-- Card 6 -->
+      <div class="card" data-aos="fade-up" data-aos-delay="600">
+        <img src="Assets/Resturents/Menu 6 Cafe Wala.jpeg" alt="Restaurant 6">
+        <div class="card-content">
+          <h3>Cafe Wala</h3>
+          <p>Pizza, Chinese</p>
+          <button onclick="window.location.href='Menus/menu5.html'">View Menu</button>
+        </div>
+      </div>
+  
+      <!-- Card 7 -->
+      <div class="card" data-aos="fade-up" data-aos-delay="700">
+        <img src="Assets/Resturents/menu 7 Kekiz.jpeg" alt="Restaurant 7">
+        <div class="card-content">
+          <h3>Kekiz</h3>
+          <p>Bakery, Desserts</p>
+          <button onclick="window.location.href='Menus/menu6.html'">View Menu</button>
+        </div>
+      </div>
+  
+      <!-- Card 8 -->
+      <div class="card" data-aos="fade-up" data-aos-delay="800">
+        <img src="Assets/Resturents/menu 8 Creamy Spicy.jpeg" alt="Restaurant 8">
+        <div class="card-content">
+          <h3>Creamy  Spicy</h3>
+          <p>Bakery, Desserts, Pizza</p>
+          <button onclick="window.location.href='Menus/menu7.html'">View Menu</button>
+        </div>
+      </div>
+  
+      <!-- Card 9 -->
+      <div class="card" data-aos="fade-up" data-aos-delay="900">
+        <img src="Assets/Resturents/menu 9 subway.jpeg" alt="Restaurant 9">
+        <div class="card-content">
+          <h3>Subway</h3>
+          <p>Healthy Food, Sandwich, Fast Food, Wraps, Salad, Beverages</p>
+         <button onclick="window.location.href='Menus/menu8.html'">View Menu</button>
+        </div>
+      </div>
+  
+      <!-- Card 10 -->
+      <div class="card" data-aos="fade-up" data-aos-delay="1000">
+        <img src="Assets/Resturents/menu 10 Frullato.jpeg" alt="Restaurant 10">
+        <div class="card-content">
+          <h3>Frullato</h3>
+          <p>Shake, Desserts</p>
+          <button onclick="window.location.href='Menus/menu9.html'">View Menu</button>
+        </div>
+      </div>
+
+      <!-- Card 11 -->
+      <div class="card" data-aos="fade-up" data-aos-delay="1100">
+        <img src="Assets/Resturents/menu 11 - Balle Balle  - The Family Dhaba.jpeg" alt="Restaurant 11">
+        <div class="card-content">
+          <h3> Balle Balle  - The Family Dhaba</h3>
+          <p>Biryani, North Indian, BBQ, Mughlai, Chinese</p>
+          <button onclick="window.location.href='Menus/menu10.html'">View Menu</button>
+        </div>
+      </div>
+      <!-- Card 12 -->
+      <div class="card" data-aos="fade-up" data-aos-delay="1200">
+        <img src="Assets/Resturents/Menu 12 Baskin Robbibs.jpeg" alt="Restaurant 12">
+        <div class="card-content">
+          <h3>Baskin Robbins</h3>
+          <p>Ice Cream.</p>
+          <button onclick="window.location.href='Menus/menu11.html'">View Menu</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <main style="height: 100px;"></main>
+    <!-- Temp height to test sticky navbar -->
+  </main>
+
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    // Initialize AOS animations
+    AOS.init({
+      duration: 1000,
+      once: true
+    });
+
+    // Check if the user is logged in
+    const user = JSON.parse(localStorage.getItem('user'));
+
+    // Get the authLink element where Login/Profile will be added
+    const authLink = document.getElementById('authLink');
+
+    if (user) {
+      // If the user is logged in, replace the Login link with Profile menu
+      authLink.innerHTML = `Hello, ${user.name}`;
+      authLink.setAttribute("href", "profile.html");
+    } else {
+      // If no user is logged in, show the Login link
+      authLink.innerHTML = "Login";
+      authLink.setAttribute("href", "login.html");
+    }
+  </script>
+
+  <script src="location.js"></script>
+
+  
+
+</body>
+</html>

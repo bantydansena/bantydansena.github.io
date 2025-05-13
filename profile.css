@@ -1,0 +1,89 @@
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: #f9f3eb;
+  color: #333;
+}
+
+.profile-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  background: #fff;
+  width: 100%;
+  max-width: 360px;
+  box-shadow: 2px 0 6px rgba(0, 0, 0, 0.1);
+  padding: 2rem 1.5rem;
+  box-sizing: border-box;
+  animation: slideIn 0.5s ease-in-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-50%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.avatar-box {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.avatar {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  border: 3px solid #ff914d;
+  object-fit: cover;
+}
+
+h2 {
+  margin: 1rem 0 0.2rem;
+  font-size: 1.3rem;
+}
+
+.menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menu li {
+  padding: 1rem;
+  border-top: 1px solid #eee;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.menu li span {
+  margin-right: 8px;
+}
+
+.menu li:hover {
+  background: #f0f0f0;
+}
+
+.logout {
+  color: red;
+  font-weight: bold;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .menu li {
+    font-size: 1rem;
+    padding: 0.8rem;
+  }
+}

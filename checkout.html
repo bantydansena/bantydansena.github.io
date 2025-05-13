@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Foodzie - Checkout</title>
+  <link rel="stylesheet" href="checkout.css">
+</head>
+<body>
+  <div class="checkout-container">
+    <div class="left">
+      <h2>Order Type</h2>
+      <label><input type="radio" checked disabled> Takeaway</label>
+
+      <h3>Personal Details</h3>
+      <input type="text" id="name" readonly>
+      <input type="text" id="email" readonly>
+      <input type="text" id="phone" value="9691823910" readonly>
+
+      <h3>Restaurant Info</h3>
+      <p>Vyapar Vihar, Bilaspur Kh. No. 830/1, Plot A-6, Beside Indian Bank, Chhattisgarh - 495001</p>
+
+      <h3>Choose Payment Mode</h3>
+      <select id="paymentMethod">
+        <option>Pay Online (UPI, Card, Wallet)</option>
+        <option>Cash on Delivery</option>
+      </select>
+
+      <button onclick="makePayment()">Make Payment</button>
+    </div>
+
+    <div class="right">
+      <h2>Your Cart</h2>
+      <div id="cartDetails"></div>
+      <p>Taxes & Charges: ₹<span id="taxes">0</span></p>
+      <h3>Total Payable: ₹<span id="total">0</span></h3>
+
+      <label>
+        <input type="checkbox" id="donate"> Optional: Donate ₹1 to education charity
+      </label>
+      <p><a href="#">Refer to Terms & Conditions</a></p>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", loadCheckout);
+  </script>
+  
+  <script src="checkout.js"></script>
+</body>
+</html>
