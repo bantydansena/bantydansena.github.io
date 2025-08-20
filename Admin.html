@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FoodFrenzy Admin (Vanilla)</title>
+  <style>
+    :root{
+      --bg: #f7f7fb; --card:#ffffff; --text:#111827; --muted:#6b7280; --brand:#7c3aed; --brand-2:#f43f5e; --border:#e5e7eb; --good:#16a34a; --warn:#f59e0b; --bad:#ef4444;
+      --radius: 16px; --shadow: 0 10px 20px rgba(0,0,0,.06);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif;background:linear-gradient(180deg,#fafafa, #f3f4f6)}
+    .app{min-height:100%;display:grid;grid-template-rows:auto 1fr}
+    header{position:sticky;top:0;background:rgba(255,255,255,.8);backdrop-filter:saturate(180%) blur(10px);border-bottom:1px solid var(--border);z-index:10}
+    .head{max-width:1200px;margin:auto;display:flex;gap:12px;align-items:center;justify-content:space-between;padding:12px}
+    .logo{display:flex;gap:10px;align-items:center}
+    .logo-badge{width:40px;height:40px;border-radius:14px;background:linear-gradient(135deg,var(--brand),var(--brand-2))}
+    .title{font-weight:800}
+    .muted{color:var(--muted)}
+
+    .shell{max-width:1200px;margin:16px auto;display:grid;gap:16px;grid-template-columns:260px 1fr;padding:0 12px}
+
+    aside{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:8px;height:max-content;position:sticky;top:72px}
+    .nav-btn{width:100%;display:flex;align-items:center;gap:10px;border:none;background:transparent;padding:12px;border-radius:12px;font-weight:600;color:#374151;cursor:pointer}
+    .nav-btn:hover{background:#f3f4f6}
+    .nav-btn.active{background:linear-gradient(180deg,#ede9fe,#fff);color:#111827;border:1px solid #ddd}
+    .pill{display:inline-flex;gap:6px;align-items:center;background:#f3f4f6;border:1px solid var(--border);border-radius:999px;padding:6px 10px;font-size:12px}
+
+    main{display:block}
+    .grid{display:grid;gap:16px}
+    .grid-5{grid-template-columns:repeat(5,minmax(0,1fr))}
+    .grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+
+    .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)}
+    .card-h{padding:14px 16px;border-bottom:1px solid var(--border)}
+    .card-b{padding:16px}
+
+    .kpi{display:flex;flex-direction:column;gap:8px}
+    .kpi .label{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:8px}
+    .kpi .value{font-size:22px;font-weight:800}
+
+    .row{display:flex;gap:8px;align-items:center}
+    .grow{flex:1}
+    input, select, textarea, button{font:inherit}
+    input[type="text"], input[type="number"], select, textarea{
+      width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:12px;background:#fff
+    }
+    button.btn{padding:10px 12px;border-radius:12px;border:1px solid var(--border);background:#fff;cursor:pointer}
+    .btn.primary{background:linear-gradient(135deg,var(--brand),var(--brand-2));color:#fff;border:none}
+    .btn.ghost{background:transparent}
+    .btn.danger{background:var(--bad);color:#fff;border:none}
+
+    table{width:100%;border-collapse:collapse;font-size:14px}
+    th,td{padding:10px 12px;text-align:left;border-top:1px solid var(--border)}
+    thead th{background:#f9fafb;font-weight:700}
+
+    .badge{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:4px 10px;font-size:12px;border:1px solid var(--border);background:#f9fafb}
+    .badge.green{background:#ecfdf5;border-color:#bbf7d0;color:#065f46}
+    .badge.yellow{background:#fffbeb;border-color:#fde68a;color:#92400e}
+    .badge.red{background:#fef2f2;border-color:#fecaca;color:#991b1b}
+    .hidden{display:none !important}
+
+    .empty{border:1px dashed var(--border);border-radius:var(--radius);padding:32px;text-align:center;background:#fff}
+
+    /* Simple CSS bars for the revenue chart */
+    .bars{display:flex;align-items:flex-end;gap:10px;height:200px}
+    .bar{flex:1;background:linear-gradient(180deg,#ddd,#bbb);border-radius:8px 8px 0 0;position:relative}
+    .bar::after{content:attr(data-label);position:absolute;bottom:-22px;left:50%;transform:translateX(-50%);font-size:12px;color:var(--muted)}
+    .bar .tip{position:absolute;top:-26px;left:50%;transform:translateX(-50%);font-size:12px;background:#000;color:#fff;padding:2px 6px;border-radius:6px;opacity:.85}
+
+    /* dialog */
+    dialog{border:none;border-radius:16px;box-shadow:var(--shadow);padding:0;width:min(560px,90vw)}
+    dialog::backdrop{background:rgba(0,0,0,.4)}
+    .dlg-h{padding:16px;border-bottom:1px solid var(--border);font-weight:800}
+    .dlg-b{padding:16px;display:grid;gap:10px}
+    .dlg-f{padding:16px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end}
+
+    @media (max-width: 900px){
+      .shell{grid-template-columns:1fr}
+      aside{position:static}
+      .grid-5{grid-template-columns:1fr 1fr}
+      .grid-3{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+<div class="app" id="app">
+  <header>
+    <div class="head">
+      <div class="logo">
+        <div class="logo-badge"></div>
+        <div>
+          <div class="title">FoodFrenzy Admin</div>
+          <div class="muted" style="font-size:12px">Operations dashboard</div>
+        </div>
+      </div>
+      <div class="row" style="gap:12px">
+        <div class="row" style="position:relative">
+          <svg width="16" height="16" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);opacity:.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input id="globalSearch" type="text" placeholder="Search orders, users, restaurants…" style="padding-left:32px;width:260px"/>
+        </div>
+        <button class="btn" id="logout">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="shell">
+    <aside>
+      <button class="nav-btn active" data-tab="overview">🏠 Overview</button>
+      <button class="nav-btn" data-tab="orders">🛒 Orders</button>
+      <button class="nav-btn" data-tab="restaurants">🏪 Restaurants</button>
+      <button class="nav-btn" data-tab="menu">🍕 Menu Items</button>
+      <button class="nav-btn" data-tab="users">👥 Users</button>
+      <button class="nav-btn" data-tab="promos">🏷️ Promotions</button>
+      <button class="nav-btn" data-tab="settings">⚙️ Settings</button>
+
+      <div style="padding:12px">
+        <div class="muted" style="font-size:12px;margin:6px 0">Quick Filters</div>
+        <div class="row" style="flex-wrap:wrap">
+          <span class="pill">Today</span>
+          <span class="pill">High AOV</span>
+          <span class="pill">Delayed</span>
+          <span class="pill">Refunds</span>
+        </div>
+      </div>
+    </aside>
+
+    <main>
+      <!-- OVERVIEW -->
+      <section id="tab-overview">
+        <div class="grid grid-5">
+          <div class="card kpi"><div class="card-h label">Orders</div><div class="card-b value" id="kpi-orders">—</div></div>
+          <div class="card kpi"><div class="card-h label">Restaurants</div><div class="card-b value" id="kpi-rests">—</div></div>
+          <div class="card kpi"><div class="card-h label">Customers</div><div class="card-b value" id="kpi-customers">—</div></div>
+          <div class="card kpi"><div class="card-h label">AOV</div><div class="card-b value" id="kpi-aov">—</div></div>
+          <div class="card kpi"><div class="card-h label">Revenue</div><div class="card-b value" id="kpi-revenue">—</div></div>
+        </div>
+
+        <div class="grid grid-3" style="margin-top:16px">
+          <div class="card" style="grid-column:span 2">
+            <div class="card-h">Revenue (Last 7 days)</div>
+            <div class="card-b">
+              <div class="bars" id="rev-bars"></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-h">Orders by Status</div>
+            <div class="card-b" id="status-pills" class="row" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ORDERS -->
+      <section id="tab-orders" class="hidden">
+        <div class="row" style="gap:8px;margin-bottom:8px">
+          <select id="orderStatusFilter" style="width:160px">
+            <option value="">All statuses</option>
+            <option>Pending</option>
+            <option>Preparing</option>
+            <option>Out for Delivery</option>
+            <option>Delivered</option>
+            <option>Cancelled</option>
+          </select>
+          <input type="text" id="orderSearch" placeholder="Search by order ID, user, restaurant…" style="width:300px"/>
+          <button class="btn" id="orderRefresh">Refresh</button>
+          <button class="btn" id="orderExport">Export CSV</button>
+        </div>
+        <div class="card">
+          <div class="card-b">
+            <div class="empty hidden" id="orders-empty">No orders found. Try clearing filters.</div>
+            <div class="table-wrap">
+              <table id="ordersTable">
+                <thead><tr>
+                  <th>Order ID</th><th>Customer</th><th>Restaurant</th><th>Total</th><th>Status</th><th>Placed</th><th>Actions</th>
+                </tr></thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- RESTAURANTS -->
+      <section id="tab-restaurants" class="hidden">
+        <div class="row" style="justify-content:space-between;margin-bottom:8px">
+          <div class="title">Restaurants</div>
+          <button class="btn primary" id="addRestaurant">+ Add Restaurant</button>
+        </div>
+        <div class="grid grid-3" id="restaurantsGrid"></div>
+      </section>
+
+      <!-- MENU ITEMS -->
+      <section id="tab-menu" class="hidden">
+        <div class="row" style="gap:8px;margin-bottom:8px">
+          <select id="menuRestSelect" style="width:300px"><option value="">Select restaurant</option></select>
+          <button class="btn primary" id="addMenuItem">+ Add Item</button>
+        </div>
+        <div class="card"><div class="card-b">
+          <table id="menuTable"><thead><tr><th>Name</th><th>Price</th><th>Tags</th><th>Availability</th><th>Actions</th></tr></thead><tbody></tbody></table>
+        </div></div>
+      </section>
+
+      <!-- USERS -->
+      <section id="tab-users" class="hidden">
+        <div class="row" style="gap:8px;margin-bottom:8px">
+          <input type="text" id="userSearch" placeholder="Search name or email" style="width:280px"/>
+          <select id="userRoleFilter" style="width:160px"><option value="">All roles</option><option>customer</option><option>rider</option><option>manager</option><option>admin</option></select>
+          <button class="btn" id="usersRefresh">Refresh</button>
+        </div>
+        <div class="card"><div class="card-b">
+          <table id="usersTable"><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Joined</th><th>Actions</th></tr></thead><tbody></tbody></table>
+        </div></div>
+      </section>
+
+      <!-- PROMOTIONS -->
+      <section id="tab-promos" class="hidden">
+        <div class="row" style="justify-content:space-between;margin-bottom:8px">
+          <div class="title">Coupons</div>
+          <button class="btn primary" id="addCoupon">+ Create Coupon</button>
+        </div>
+        <div class="card"><div class="card-b">
+          <table id="couponTable"><thead><tr><th>Code</th><th>Discount</th><th>Active</th><th>Usage</th><th>Actions</th></tr></thead><tbody></tbody></table>
+        </div></div>
+      </section>
+
+      <!-- SETTINGS -->
+      <section id="tab-settings" class="hidden">
+        <div class="card"><div class="card-h">Platform Settings</div><div class="card-b">
+          <div class="grid" style="grid-template-columns:1fr 1fr">
+            <label>Platform name<input id="setName" type="text"></label>
+            <label>Default city<input id="setCity" type="text"></label>
+            <label>Delivery fee (INR)<input id="setFee" type="number" min="0"></label>
+            <label>Tax %<input id="setTax" type="number" min="0" max="100"></label>
+          </div>
+          <div style="margin-top:10px">
+            <label class="row" style="gap:8px"><input id="setMaint" type="checkbox"> Maintenance Mode</label>
+          </div>
+        </div>
+        <div class="card-b"><button class="btn primary" id="saveSettings">Save Settings</button></div></div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<!-- Dialogs (re-used) -->
+<dialog id="dlg">
+  <div class="dlg-h" id="dlg-title">Dialog</div>
+  <form method="dialog" class="dlg-b" id="dlg-body"></form>
+  <div class="dlg-f">
+    <button class="btn" id="dlg-cancel" value="cancel">Cancel</button>
+    <button class="btn primary" id="dlg-ok" value="ok">Save</button>
+  </div>
+</dialog>
+
+<script>
+// ---------------------------------------------
+// QUICK INTEGRATION NOTES
+// ---------------------------------------------
+// 1) Point API_BASE to your server. Replace fakeAPI calls below
+//    with real fetch() calls (see api.* functions).
+// 2) Hook up auth headers/tokens in request().
+// 3) The UI calls the api layer only in a few places; swap the
+//    implementation and you're integrated.
+
+const API_BASE = "/api"; // e.g. "https://yourdomain.com/api"
+
+async function request(method, path, body){
+  const res = await fetch(API_BASE + path, {
+    method,
+    headers: { 'Content-Type': 'application/json' /* add Authorization here */ },
+    body: body ? JSON.stringify(body) : undefined
+  });
+  if(!res.ok) throw new Error(await res.text());
+  return res.headers.get('content-type')?.includes('application/json') ? res.json() : res.text();
+}
+
+const api = {
+  // Swap these to use request()
+  dashboard: () => fakeAPI.dashboard(),
+  searchOrders: (q) => fakeAPI.searchOrders(q),
+  updateOrderStatus: (id, status) => fakeAPI.updateOrderStatus(id,status),
+  listRestaurants: () => fakeAPI.listRestaurants(),
+  createRestaurant: (r) => fakeAPI.createRestaurant(r),
+  updateRestaurant: (id,r) => fakeAPI.updateRestaurant(id,r),
+  deleteRestaurant: (id) => fakeAPI.deleteRestaurant(id),
+  listMenu: (rid) => fakeAPI.listMenu(rid),
+  upsertMenu: (rid,item) => fakeAPI.upsertMenu(rid,item),
+  deleteMenu: (rid,itemId) => fakeAPI.deleteMenu(rid,itemId),
+  listUsers: (q) => fakeAPI.listUsers(q),
+  updateUserRole: (id,role) => fakeAPI.updateUserRole(id,role),
+  listCoupons: () => fakeAPI.listCoupons(),
+  upsertCoupon: (c) => fakeAPI.upsertCoupon(c),
+  deleteCoupon: (id) => fakeAPI.deleteCoupon(id),
+  getSettings: () => fakeAPI.getSettings(),
+  saveSettings: (s) => fakeAPI.saveSettings(s)
+};
+
+// ---------------------------------------------
+// DEMO DATA (remove when wired to backend)
+// ---------------------------------------------
+const fakeDB = {
+  dashboard: {
+    kpis: { revenue: 1245000, orders: 8423, aov: 248, restaurants: 8, customers: 12680 },
+    ordersByStatus: [
+      { name: 'Delivered', value: 6200 },
+      { name: 'Preparing', value: 540 },
+      { name: 'Out for Delivery', value: 210 },
+      { name: 'Cancelled', value: 1473 }
+    ],
+    revenue7d: [
+      { day: 'Mon', revenue: 140000 },{ day: 'Tue', revenue: 165000 },{ day: 'Wed', revenue: 152000 },{ day: 'Thu', revenue: 178000 },{ day: 'Fri', revenue: 210000 },{ day: 'Sat', revenue: 260000 },{ day: 'Sun', revenue: 215000 }
+    ]
+  },
+  restaurants: [
+    { id:1, name:'Burger King', cuisine:'Fast Food', city:'Pune', active:true },
+    { id:2, name:'KFC', cuisine:'Fast Food', city:'Pune', active:true },
+    { id:3, name:'Balle Balle Dhaba', cuisine:'North Indian', city:'Pune', active:true },
+    { id:4, name:'Subway', cuisine:'Sandwiches', city:'Pune', active:true },
+    { id:5, name:'Kekiz', cuisine:'Bakery', city:'Pune', active:false },
+    { id:6, name:'Haldiram\'s', cuisine:'Sweets', city:'Pune', active:true },
+    { id:7, name:'Burger Singh', cuisine:'Burgers', city:'Pune', active:true },
+    { id:8, name:'Cafe Wala', cuisine:'Cafe', city:'Pune', active:false }
+  ],
+  menus: {
+    1:[{id:11,name:'Whopper',price:199,tags:['spicy'],available:true,veg:false}],
+    2:[{id:21,name:'Zinger Box',price:299,tags:['combo'],available:true,veg:false}],
+    3:[{id:31,name:'Paneer Tikka',price:249,tags:['veg'],available:true,veg:true}],
+    4:[{id:41,name:'Veg Sub',price:179,tags:['veg'],available:true,veg:true}]
+  },
+  users:[
+    {id:1,name:'Aman Gupta',email:'aman@example.com',role:'customer',createdAt:Date.now()-86400000*5},
+    {id:2,name:'Ritika Jain',email:'ritika@example.com',role:'rider',createdAt:Date.now()-86400000*30},
+    {id:3,name:'Manager Mohan',email:'mohan@example.com',role:'manager',createdAt:Date.now()-86400000*90},
+    {id:4,name:'Admin Alia',email:'alia@example.com',role:'admin',createdAt:Date.now()-86400000*300}
+  ],
+  coupons:[{id:1,code:'WELCOME10',discountPct:10,active:true,usageCount:54}],
+  orders: Array.from({length:36}).map((_,i)=>({
+    id:1000+i,
+    customerName:['Aman','Ritika','Mohan','Alia','Rohit','Neha'][i%6],
+    restaurantName: ['Burger King','KFC','Balle Balle Dhaba','Subway'][i%4],
+    total: [199,249,299,349,399][i%5],
+    status: ['Pending','Preparing','Out for Delivery','Delivered','Cancelled'][i%5],
+    createdAt: Date.now()- 1000*60*60*(i+1),
+    items:[{name:'Item '+(i%4+1), qty:1+ (i%3), price:99 + (i%5)*20}]
+  }]),
+  settings:{ platformName:'FoodFrenzy', city:'Pune', deliveryFee:29, taxPct:5, maintenance:false }
+};
+
+const fakeAPI = {
+  delay: (ms=150) => new Promise(r=>setTimeout(r,ms)),
+  dashboard: async ()=>{ await fakeAPI.delay(); return JSON.parse(JSON.stringify(fakeDB.dashboard)); },
+  searchOrders: async (q)=>{ await fakeAPI.delay(); const list = fakeDB.orders.filter(o=>
+      (!q.status || o.status===q.status) &&
+      (!q.q || (String(o.id).includes(q.q) || o.customerName.toLowerCase().includes(q.q.toLowerCase()) || o.restaurantName.toLowerCase().includes(q.q.toLowerCase())))
+    );
+    const start=(q.page-1)*q.pageSize,end=start+q.pageSize; return { items:list.slice(start,end), total:list.length };
+  },
+  updateOrderStatus: async (id,status)=>{ await fakeAPI.delay(); const o=fakeDB.orders.find(o=>o.id===id); if(o) o.status=status; return o;},
+  listRestaurants: async ()=>{ await fakeAPI.delay(); return JSON.parse(JSON.stringify(fakeDB.restaurants)); },
+  createRestaurant: async (r)=>{ await fakeAPI.delay(); r.id=Math.max(0,...fakeDB.restaurants.map(x=>x.id))+1; fakeDB.restaurants.push(r); return r; },
+  updateRestaurant: async (id,r)=>{ await fakeAPI.delay(); Object.assign(fakeDB.restaurants.find(x=>x.id===id)||{},r); return r; },
+  deleteRestaurant: async (id)=>{ await fakeAPI.delay(); const i=fakeDB.restaurants.findIndex(x=>x.id===id); if(i>-1) fakeDB.restaurants.splice(i,1); },
+  listMenu: async (rid)=>{ await fakeAPI.delay(); return JSON.parse(JSON.stringify(fakeDB.menus[rid]||[])); },
+  upsertMenu: async (rid,item)=>{ await fakeAPI.delay(); fakeDB.menus[rid]=fakeDB.menus[rid]||[]; if(item.id){ Object.assign(fakeDB.menus[rid].find(x=>x.id===item.id)||{},item);} else { item.id=Date.now(); fakeDB.menus[rid].push(item);} return item; },
+  deleteMenu: async (rid,id)=>{ await fakeAPI.delay(); fakeDB.menus[rid]=(fakeDB.menus[rid]||[]).filter(x=>x.id!==id); },
+  listUsers: async (q)=>{ await fakeAPI.delay(); const list=fakeDB.users.filter(u=>(!q.q||u.name.toLowerCase().includes(q.q.toLowerCase())||u.email.toLowerCase().includes(q.q.toLowerCase())) && (!q.role||u.role===q.role)); return { items:list, total:list.length }; },
+  updateUserRole: async (id,role)=>{ await fakeAPI.delay(); (fakeDB.users.find(u=>u.id===id)||{}).role=role; },
+  listCoupons: async ()=>{ await fakeAPI.delay(); return JSON.parse(JSON.stringify(fakeDB.coupons)); },
+  upsertCoupon: async (c)=>{ await fakeAPI.delay(); if(c.id){ Object.assign(fakeDB.coupons.find(x=>x.id===c.id)||{},c);} else { c.id=Date.now(); fakeDB.coupons.push(c);} return c; },
+  deleteCoupon: async (id)=>{ await fakeAPI.delay(); fakeDB.coupons=fakeDB.coupons.filter(c=>c.id!==id); },
+  getSettings: async ()=>{ await fakeAPI.delay(); return JSON.parse(JSON.stringify(fakeDB.settings)); },
+  saveSettings: async (s)=>{ await fakeAPI.delay(); Object.assign(fakeDB.settings,s); return s; }
+};
+
+// ---------------------------------------------
+// UTILITIES
+// ---------------------------------------------
+const INR = n => new Intl.NumberFormat('en-IN',{style:'currency',currency:'INR',maximumFractionDigits:0}).format(Number(n||0));
+const el = sel => document.querySelector(sel);
+const els = sel => Array.from(document.querySelectorAll(sel));
+
+function setActiveTab(tab){
+  els('.nav-btn').forEach(b=>b.classList.toggle('active', b.dataset.tab===tab));
+  els('main > section').forEach(s=>s.classList.toggle('hidden', s.id!==`tab-${tab}`));
+}
+
+// ---------------------------------------------
+// OVERVIEW RENDER
+// ---------------------------------------------
+async function renderOverview(){
+  const d = await api.dashboard();
+  el('#kpi-orders').textContent = d.kpis.orders.toLocaleString();
+  el('#kpi-rests').textContent = d.kpis.restaurants.toLocaleString();
+  el('#kpi-customers').textContent = d.kpis.customers.toLocaleString();
+  el('#kpi-aov').textContent = INR(d.kpis.aov);
+  el('#kpi-revenue').textContent = INR(d.kpis.revenue);
+  // bars
+  const max = Math.max(...d.revenue7d.map(x=>x.revenue));
+  el('#rev-bars').innerHTML = d.revenue7d.map(x=>{
+    const h = Math.max(4, Math.round(x.revenue/max*180));
+    return `<div class="bar" style="height:${h}px"><div class="tip">${INR(x.revenue)}</div></div>`
+           .replace('<div class="bar"', `<div class="bar" data-label="${x.day}"`);
+  }).join('');
+  // status pills
+  el('#status-pills').innerHTML = d.ordersByStatus.map(s=>{
+    const cls = s.name==='Delivered' ? 'green' : s.name==='Cancelled' ? 'red' : 'yellow';
+    return `<span class="badge ${cls}">${s.name}: <b>${s.value}</b></span>`;
+  }).join('');
+}
+
+// ---------------------------------------------
+// ORDERS
+// ---------------------------------------------
+let orderQuery = { page:1, pageSize:10, status:'', q:'' };
+async function renderOrders(){
+  const res = await api.searchOrders(orderQuery);
+  const tbody = el('#ordersTable tbody');
+  tbody.innerHTML = '';
+  el('#orders-empty').classList.toggle('hidden', res.items.length>0);
+  res.items.forEach(o=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>#${o.id}</td>
+      <td>${o.customerName}</td>
+      <td>${o.restaurantName}</td>
+      <td>${INR(o.total)}</td>
+      <td><span class="badge">${o.status}</span></td>
+      <td class="muted">${new Date(o.createdAt).toLocaleString()}</td>
+      <td><button class="btn" data-view="${o.id}">View</button></td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+function openOrderDialog(order){
+  const dlg = el('#dlg');
+  el('#dlg-title').textContent = `Order #${order.id}`;
+  el('#dlg-body').innerHTML = `
+    <div><b>Customer:</b> ${order.customerName}</div>
+    <div><b>Restaurant:</b> ${order.restaurantName}</div>
+    <div><b>Total:</b> ${INR(order.total)}</div>
+    <div style="margin-top:8px"><b>Items</b>
+      <ul style="margin:6px 0 0 16px">${order.items.map(it=>`<li>${it.qty}× ${it.name} — ${INR(it.price*it.qty)}</li>`).join('')}</ul>
+    </div>
+    <label style="margin-top:8px">Status
+      <select id="orderStatusSel">
+        ${['Pending','Preparing','Out for Delivery','Delivered','Cancelled'].map(s=>`<option ${s===order.status?'selected':''}>${s}</option>`).join('')}
+      </select>
+    </label>`;
+  dlg.returnValue = '';
+  dlg.showModal();
+  el('#dlg-ok').onclick = async ()=>{
+    const status = el('#orderStatusSel').value;
+    await api.updateOrderStatus(order.id, status);
+    dlg.close();
+    renderOrders();
+  };
+}
+
+// ---------------------------------------------
+// RESTAURANTS
+// ---------------------------------------------
+async function renderRestaurants(){
+  const list = await api.listRestaurants();
+  const grid = el('#restaurantsGrid');
+  grid.innerHTML = '';
+  list.forEach(r=>{
+    const card = document.createElement('div');
+    card.className='card';
+    card.innerHTML = `
+      <div class="card-h" style="display:flex;justify-content:space-between;align-items:center">
+        <div style="font-weight:700">${r.name}</div>
+        <span class="badge ${r.active?'green':'yellow'}">${r.active?'Active':'Paused'}</span>
+      </div>
+      <div class="card-b muted">Cuisine: <b style="color:#111827">${r.cuisine||'—'}</b><br>City: ${r.city||'—'}</div>
+      <div class="card-b" style="display:flex;gap:8px">
+        <button class="btn" data-edit="${r.id}">Edit</button>
+        <button class="btn danger" data-del="${r.id}">Delete</button>
+      </div>`;
+    grid.appendChild(card);
+  });
+}
+
+function openRestaurantDialog(r){
+  const dlg = el('#dlg');
+  const isEdit = !!r.id;
+  el('#dlg-title').textContent = isEdit? 'Edit Restaurant' : 'Add Restaurant';
+  el('#dlg-body').innerHTML = `
+    <label>Name<input id="r-name" type="text" value="${r.name||''}" required></label>
+    <label>Cuisine<input id="r-cuisine" type="text" value="${r.cuisine||''}"></label>
+    <label>City<input id="r-city" type="text" value="${r.city||''}"></label>
+    <label class="row" style="gap:8px"><input id="r-active" type="checkbox" ${r.active?'checked':''}> Active</label>
+  `;
+  dlg.showModal();
+  el('#dlg-ok').onclick = async ()=>{
+    const payload = { name:el('#r-name').value, cuisine:el('#r-cuisine').value, city:el('#r-city').value, active:el('#r-active').checked };
+    if(isEdit) await api.updateRestaurant(r.id, payload); else await api.createRestaurant(payload);
+    dlg.close();
+    await renderRestaurants();
+    await refreshMenuRestaurantSelect();
+  };
+}
+
+// ---------------------------------------------
+// MENU ITEMS
+// ---------------------------------------------
+async function refreshMenuRestaurantSelect(){
+  const list = await api.listRestaurants();
+  const sel = el('#menuRestSelect');
+  const cur = sel.value;
+  sel.innerHTML = '<option value="">Select restaurant</option>' + list.map(r=>`<option value="${r.id}">${r.name}</option>`).join('');
+  if(cur) sel.value = cur;
+}
+async function renderMenu(){
+  const rid = Number(el('#menuRestSelect').value);
+  const tbody = el('#menuTable tbody');
+  tbody.innerHTML = '';
+  if(!rid){ tbody.innerHTML = '<tr><td colspan="5"><div class="empty">Choose a restaurant to manage its menu.</div></td></tr>'; return; }
+  const items = await api.listMenu(rid);
+  items.forEach(it=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${it.name}</td>
+      <td>${INR(it.price)}</td>
+      <td>${(it.tags||[]).join(', ')}</td>
+      <td><span class="badge ${it.available?'green':'yellow'}">${it.available?'Available':'Unavailable'}</span></td>
+      <td>
+        <button class="btn" data-edit-item="${it.id}">Edit</button>
+        <button class="btn danger" data-del-item="${it.id}">Delete</button>
+      </td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+function openMenuItemDialog(item){
+  const rid = Number(el('#menuRestSelect').value);
+  const isEdit = !!item.id;
+  const dlg = el('#dlg');
+  el('#dlg-title').textContent = isEdit? 'Edit Item' : 'Add Item';
+  el('#dlg-body').innerHTML = `
+    <label>Item name<input id="mi-name" type="text" value="${item.name||''}" required></label>
+    <label>Price (INR)<input id="mi-price" type="number" min="0" value="${item.price||0}" required></label>
+    <label>Tags (comma separated)<input id="mi-tags" type="text" value="${(item.tags||[]).join(', ')}"></label>
+    <label class="row" style="gap:8px"><input id="mi-available" type="checkbox" ${item.available!==false?'checked':''}> Available</label>
+    <label class="row" style="gap:8px"><input id="mi-veg" type="checkbox" ${item.veg?'checked':''}> Vegetarian</label>
+    <label>Description<textarea id="mi-desc">${item.description||''}</textarea></label>
+  `;
+  dlg.showModal();
+  el('#dlg-ok').onclick = async ()=>{
+    const payload = {
+      id: item.id,
+      name: el('#mi-name').value,
+      price: Number(el('#mi-price').value||0),
+      tags: el('#mi-tags').value.split(',').map(s=>s.trim()).filter(Boolean),
+      available: el('#mi-available').checked,
+      veg: el('#mi-veg').checked,
+      description: el('#mi-desc').value
+    };
+    await api.upsertMenu(rid, payload);
+    dlg.close();
+    renderMenu();
+  };
+}
+
+// ---------------------------------------------
+// USERS
+// ---------------------------------------------
+let userQuery={ q:'', role:'' };
+async function renderUsers(){
+  const res = await api.listUsers(userQuery);
+  const tbody = el('#usersTable tbody');
+  tbody.innerHTML = '';
+  res.items.forEach(u=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${u.name}</td>
+      <td>${u.email}</td>
+      <td>
+        <select data-role="${u.id}">
+          ${['customer','rider','manager','admin'].map(r=>`<option ${r===u.role?'selected':''}>${r}</option>`).join('')}
+        </select>
+      </td>
+      <td class="muted">${new Date(u.createdAt).toLocaleDateString()}</td>
+      <td><button class="btn">View</button></td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+// ---------------------------------------------
+// COUPONS
+// ---------------------------------------------
+async function renderCoupons(){
+  const list = await api.listCoupons();
+  const tbody = el('#couponTable tbody');
+  tbody.innerHTML = '';
+  list.forEach(c=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><code>${c.code}</code></td>
+      <td>${c.discountPct}%</td>
+      <td><span class="badge ${c.active?'green':'yellow'}">${c.active?'Active':'Paused'}</span></td>
+      <td>${c.usageCount||0}</td>
+      <td>
+        <button class="btn" data-edit-coupon="${c.id}">Edit</button>
+        <button class="btn danger" data-del-coupon="${c.id}">Delete</button>
+      </td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+function openCouponDialog(c){
+  const isEdit = !!c.id;
+  const dlg = el('#dlg');
+  el('#dlg-title').textContent = isEdit? 'Edit Coupon' : 'Create Coupon';
+  el('#dlg-body').innerHTML = `
+    <label>Code<input id="cp-code" type="text" value="${c.code||''}" required></label>
+    <label>Discount %<input id="cp-disc" type="number" min="0" max="100" value="${c.discountPct||0}" required></label>
+    <label class="row" style="gap:8px"><input id="cp-active" type="checkbox" ${c.active!==false?'checked':''}> Active</label>
+    <label>Terms<textarea id="cp-terms">${c.terms||''}</textarea></label>
+  `;
+  dlg.showModal();
+  el('#dlg-ok').onclick = async ()=>{
+    const payload = { id:c.id, code: el('#cp-code').value.toUpperCase(), discountPct: Number(el('#cp-disc').value||0), active: el('#cp-active').checked, terms: el('#cp-terms').value };
+    await api.upsertCoupon(payload);
+    dlg.close();
+    renderCoupons();
+  };
+}
+
+// ---------------------------------------------
+// SETTINGS
+// ---------------------------------------------
+async function renderSettings(){
+  const s = await api.getSettings();
+  el('#setName').value = s.platformName||'';
+  el('#setCity').value = s.city||'';
+  el('#setFee').value = s.deliveryFee||0;
+  el('#setTax').value = s.taxPct||0;
+  el('#setMaint').checked = !!s.maintenance;
+}
+
+async function saveSettings(){
+  const s = {
+    platformName: el('#setName').value,
+    city: el('#setCity').value,
+    deliveryFee: Number(el('#setFee').value||0),
+    taxPct: Number(el('#setTax').value||0),
+    maintenance: el('#setMaint').checked
+  };
+  await api.saveSettings(s);
+  alert('Settings saved');
+}
+
+// ---------------------------------------------
+// EVENTS
+// ---------------------------------------------
+// tab switch
+els('.nav-btn').forEach(b=>b.addEventListener('click', async ()=>{
+  setActiveTab(b.dataset.tab);
+  if(b.dataset.tab==='overview') renderOverview();
+  if(b.dataset.tab==='orders') renderOrders();
+  if(b.dataset.tab==='restaurants') renderRestaurants();
+  if(b.dataset.tab==='menu'){ await refreshMenuRestaurantSelect(); renderMenu(); }
+  if(b.dataset.tab==='users') renderUsers();
+  if(b.dataset.tab==='promos') renderCoupons();
+  if(b.dataset.tab==='settings') renderSettings();
+}));
+
+// orders filters
+el('#orderStatusFilter').addEventListener('change', e=>{ orderQuery.status=e.target.value; orderQuery.page=1; renderOrders(); });
+el('#orderSearch').addEventListener('input', e=>{ orderQuery.q=e.target.value; orderQuery.page=1; renderOrders(); });
+el('#orderRefresh').addEventListener('click', renderOrders);
+el('#ordersTable').addEventListener('click', e=>{
+  const id = e.target.closest('tr')?.querySelector('td')?.textContent?.replace('#','');
+  if(e.target.matches('button.btn')){
+    const order = fakeDB.orders.find(o=>String(o.id)===id);
+    if(order) openOrderDialog(order);
+  }
+});
+
+// restaurants actions
+el('#addRestaurant').addEventListener('click', ()=>openRestaurantDialog({ active:true }));
+el('#restaurantsGrid').addEventListener('click', e=>{
+  const id = Number(e.target.dataset.edit || e.target.dataset.del);
+  if(e.target.dataset.edit){
+    const r = fakeDB.restaurants.find(x=>x.id===id); if(r) openRestaurantDialog(r);
+  } else if(e.target.dataset.del){
+    if(confirm('Delete this restaurant?')) api.deleteRestaurant(id).then(()=>{ renderRestaurants(); refreshMenuRestaurantSelect(); });
+  }
+});
+
+// menu actions
+el('#menuRestSelect').addEventListener('change', renderMenu);
+el('#addMenuItem').addEventListener('click', ()=>{
+  if(!el('#menuRestSelect').value) return alert('Select a restaurant first');
+  openMenuItemDialog({ available:true, veg:true, price:0 });
+});
+el('#menuTable').addEventListener('click', e=>{
+  const rid = Number(el('#menuRestSelect').value);
+  const row = e.target.closest('tr');
+  if(e.target.dataset.editItem){
+    const id = Number(e.target.dataset.editItem);
+    api.listMenu(rid).then(items => {
+      const it = items.find(x=>x.id===id); if(it) openMenuItemDialog(it);
+    });
+  } else if(e.target.dataset.delItem){
+    const id = Number(e.target.dataset.delItem);
+    if(confirm('Delete this item?')) api.deleteMenu(rid,id).then(renderMenu);
+  }
+});
+
+// users actions
+el('#userSearch').addEventListener('input', e=>{ userQuery.q=e.target.value; renderUsers(); });
+el('#userRoleFilter').addEventListener('change', e=>{ userQuery.role=e.target.value; renderUsers(); });
+el('#usersRefresh').addEventListener('click', renderUsers);
+el('#usersTable').addEventListener('change', e=>{
+  if(e.target.matches('select[data-role]')){
+    const id = Number(e.target.getAttribute('data-role'));
+    api.updateUserRole(id, e.target.value);
+  }
+});
+
+// coupons actions
+el('#addCoupon').addEventListener('click', ()=>openCouponDialog({ active:true, discountPct:10 }));
+el('#couponTable').addEventListener('click', e=>{
+  if(e.target.dataset.editCoupon){
+    const id = Number(e.target.dataset.editCoupon);
+    const c = fakeDB.coupons.find(x=>x.id===id); if(c) openCouponDialog(c);
+  } else if(e.target.dataset.delCoupon){
+    const id = Number(e.target.dataset.delCoupon);
+    if(confirm('Delete this coupon?')) api.deleteCoupon(id).then(renderCoupons);
+  }
+});
+
+// settings
+el('#saveSettings').addEventListener('click', saveSettings);
+
+// global search (demo: filters orders only)
+el('#globalSearch').addEventListener('keydown', e=>{ if(e.key==='Enter'){ setActiveTab('orders'); orderQuery.q=e.target.value; renderOrders(); }});
+
+// boot
+setActiveTab('overview');
+renderOverview();
+</script>
+</body>
+</html>
